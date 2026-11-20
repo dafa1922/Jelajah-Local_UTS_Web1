@@ -5,7 +5,7 @@ Website direktori wisata lokal Bandung yang menampilkan informasi destinasi, men
 ## Identitas Mahasiswa
 
 - **Nama:** Dafa Irsyad Nashrullah
-- **NPM:** 24552011306
+- **NIM:** 24552011306
 - **Kelas:** TIF RP 24 CNS E
 
 ## Fitur
@@ -54,6 +54,30 @@ Untuk **PUT**, gunakan body dengan semua field di atas dan sertakan `?id={id}` p
 - Browser modern; koneksi internet diperlukan untuk memuat Bootstrap dari CDN.
 - Bruno atau Postman untuk mencoba API.
 
+## Menjalankan Proyek dan Setup Database
+
+1. Clone atau unduh repository, lalu letakkan folder proyek di `C:\laragon\www\HiddenGems`. Jika menggunakan nama folder berbeda, sesuaikan URL API di frontend.
+2. Buka Laragon, lalu jalankan **Apache** dan **MySQL**.
+3. Buka phpMyAdmin di `http://localhost/phpmyadmin`.
+4. Temukan file dump database berekstensi `.sql` yang tersedia di repository. Import melalui phpMyAdmin:
+   - Jika dump sudah berisi perintah untuk membuat database, pilih **Import** dari halaman utama phpMyAdmin dan unggah file tersebut.
+   - Jika dump hanya berisi tabel/data, buat database bernama `jelajah_lokal_db`, pilih database itu, lalu buka tab **Import** dan unggah dump SQL.
+   - Tunggu sampai phpMyAdmin memberi konfirmasi bahwa import berhasil.
+5. Pastikan konfigurasi di `backend-api/koneksi.php` cocok dengan MySQL lokal. Konfigurasi bawaan memakai host `localhost`, database `jelajah_lokal_db`, user `root`, dan password kosong (umum pada Laragon); ubah jika konfigurasi lokal berbeda.
+6. Buka `http://localhost/HiddenGems/frontend/index.html` untuk menjalankan website.
+
+Jika API menampilkan pesan koneksi database gagal, pastikan MySQL aktif, database sudah di-import, dan pengaturan di `backend-api/koneksi.php` benar.
+
+### Akun Demo
+
+Akun berikut tersedia sebagai data demo setelah database dari repository berhasil di-import:
+
+| Peran | Email | Password |
+|---|---|---|
+| Admin | `admin123@gmail.com` | `321123` |
+| Pengguna | `yono@gmail.com` | `123456789` |
+
+Masuk melalui `http://localhost/HiddenGems/frontend/login.html`. Akun admin akan diarahkan ke dashboard, sedangkan akun pengguna diarahkan ke halaman informasi.
 
 
 Endpoint API dapat dicoba menggunakan Bruno/Postman dengan base URL `http://localhost/HiddenGems/backend-api`.
@@ -103,8 +127,4 @@ Endpoint API dapat dicoba menggunakan Bruno/Postman dengan base URL `http://loca
 ### DELETE — Hapus Data
 
 ![Pengujian DELETE destinasi](screenshots/api-delete.png)
-
-## Catatan
-
-
 

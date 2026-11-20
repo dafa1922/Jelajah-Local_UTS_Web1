@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Destinasi - JelajahLokal</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css?v=20261120-detail-spacing">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script defer src="auth.js?v=20261119-auth"></script>
+    <script defer src="site-navigation.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3 site-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html"><span class="brand-mark"><i class="bi bi-compass-fill"></i></span>JelajahLokal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNavbarContent" aria-controls="siteNavbarContent" aria-expanded="false" aria-label="Buka navigasi">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="siteNavbarContent">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="index.html">Beranda</a>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kategori Wisata</a>
+                        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <li><a class="dropdown-item" href="index.html?q=Alam#destinasi"><i class="bi bi-tree me-2"></i>Wisata Alam</a></li>
+                            <li><a class="dropdown-item" href="index.html?q=Seni#destinasi"><i class="bi bi-palette me-2"></i>Seni &amp; Kreatif</a></li>
+                            <li><a class="dropdown-item" href="index.html?q=Sejarah#destinasi"><i class="bi bi-building me-2"></i>Sejarah &amp; Edukasi</a></li>
+                            <li><a class="dropdown-item" href="index.html?q=Kuliner#destinasi"><i class="bi bi-cup-hot me-2"></i>Kuliner Legendaris</a></li>
+                        </ul>
+                    </div>
+                    <form class="navbar-search" action="index.html" role="search">
+                        <label class="visually-hidden" for="navbarSearch">Cari destinasi</label>
+                        <input class="form-control" id="navbarSearch" type="search" name="q" placeholder="Cari destinasi..." autocomplete="off">
+                        <button type="submit" aria-label="Cari"><i class="bi bi-search"></i></button>
+                    </form>
+                    <div class="navbar-auth">
+                        <a class="btn btn-outline-primary" href="login.html">Masuk</a>
+                        <a class="btn btn-primary" href="register.html">Daftar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Detail -->
+    <main class="container detail-main flex-grow-1">
+        <div class="row justify-content-center detail-back-row">
+            <div class="col-lg-10 col-xl-9">
+                <a href="index.html" class="btn btn-outline-secondary btn-sm back-link"><i class="bi bi-arrow-left"></i> Kembali ke Beranda</a>
+            </div>
+        </div>
+
+        <div id="detailContainer" class="row justify-content-center">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Memuat detail...</span>
+                </div>
+                <p class="text-muted mt-2">Mengambil informasi destinasi...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Sesuai Ketentuan Soal -->
+    <footer class="site-footer text-center mt-auto">
+        <p class="mb-0 small">@Copyright by 24552011306_Dafa Irsyad Nashrullah_TIF RP 24 CNS E</p>
+    </footer>
+
+    <!-- JavaScript untuk Fetch Detail berdasarkan ID -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (!id) {
+                document.getElementById('detailContainer').innerHTML = `
+                    <div class="col-12 text-center py-5 text-danger">
+                        <h4>ID Destinasi tidak ditemukan!</h4>
+                        <a href="index.html" class="btn btn-primary mt-3">Kembali ke Beranda</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const apiUrl = `http://localhost/HiddenGems/backend-api/destinasi.php?id=${id}`;
+
+            fetch(apiUrl)
+                .then(res => res.json())
+                .then(result => {
+                    const container = document.getElementById('detailContainer');
+                    if (result.status === "success" && result.data) {
+                        const item = result.data;
+                        container.innerHTML = `
+                            <div class="col-lg-10 col-xl-9">
+                                <div class="card detail-card">
+                                    <img src="${item.gambar_url || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" class="detail-image" alt="${item.nama_tempat}">
+                                    <div class="card-body">
+                                        <span class="badge mb-3">${item.kategori}</span>
+                                        <h2 class="card-title fw-bold mb-3">${item.nama_tempat}</h2>
+                                        <p class="detail-location mb-3"><i class="bi bi-geo-alt-fill me-1"></i> ${item.lokasi}</p>
+                                        <h4 class="detail-price fw-bold mb-4">Rp ${Number(item.harga_tiket).toLocaleString('id-ID')} <small class="text-muted fs-6 fw-normal">/ orang</small></h4>
+                                        <hr class="my-4">
+                                        <h5 class="fw-bold mt-4">Tentang destinasi</h5>
+                                        <p class="detail-description mb-0" style="white-space: pre-line;">${item.deskripsi}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <div class="col-12 text-center py-5 text-danger">
+                                <h4>Data destinasi tidak ditemukan di database.</h4>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    document.getElementById('detailContainer').innerHTML = `
+                        <div class="col-12 text-center py-5 text-danger">
+                            <h4>Gagal terhubung ke server API.</h4>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>

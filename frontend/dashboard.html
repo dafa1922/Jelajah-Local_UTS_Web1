@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - JelajahLokal</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css?v=20261119-admin-navbar">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script defer src="auth.js?v=20261119-auth"></script>
+    <script defer src="site-navigation.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <!-- Navbar Dashboard -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3 site-navbar admin-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="dashboard.html"><span class="brand-mark"><i class="bi bi-compass-fill"></i></span>JelajahLokal <span class="text-muted fw-normal small">/ Admin</span></a>
+            <div class="navbar-nav ms-auto">
+                <div class="navbar-auth">
+                    <a class="btn btn-primary" href="index.html" data-logout="true"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container dashboard-main flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="dashboard-heading fw-bold">Manajemen destinasi wisata</h2>
+                <p class="text-muted mb-0">Kelola data hidden gems yang akan tampil di halaman utama.</p>
+            </div>
+            <!-- Tombol Trigger Modal Tambah -->
+            <button type="button" class="btn btn-primary rounded-pill px-4" id="btnTambahDestinasi">
+                <i class="bi bi-plus-circle"></i> Tambah Destinasi
+            </button>
+        </div>
+
+        <!-- Alert Notifikasi -->
+        <div id="alertBox" class="alert d-none" role="alert"></div>
+
+        <!-- Tabel Data Destinasi -->
+        <div class="card dashboard-table-card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Gambar</th>
+                                <th>Nama Tempat</th>
+                                <th>Kategori</th>
+                                <th>Lokasi</th>
+                                <th>Harga Tiket</th>
+                                <th class="text-end pe-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelDestinasi">
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">Memuat data dari database...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Tambah / Edit Destinasi -->
+    <div class="modal fade" id="destinasiModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-heading">
+                        <span class="modal-icon"><i class="bi bi-geo-alt"></i></span>
+                        <div>
+                            <h5 class="modal-title fw-bold" id="modalTitle">Tambah Destinasi Baru</h5>
+                            <p class="modal-subtitle">Lengkapi informasi destinasi wisata di bawah ini.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-modal-close aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="destinasiForm" class="destination-form">
+                        <input type="hidden" id="destinasiId">
+                        <div class="form-field form-field-wide">
+                            <label for="nama_tempat" class="form-label">Nama Tempat Wisata</label>
+                            <input type="text" class="form-control" id="nama_tempat" placeholder="Contoh: Curug Malela" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="kategori" class="form-label">Kategori</label>
+                            <input type="text" class="form-control" id="kategori" placeholder="Contoh: Alam, Kuliner" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="lokasi" class="form-label">Lokasi / Wilayah</label>
+                            <input type="text" class="form-control" id="lokasi" placeholder="Contoh: Bandung Utara" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="harga_tiket" class="form-label">Harga Tiket (Rp)</label>
+                            <input type="number" class="form-control" id="harga_tiket" min="0" placeholder="0 jika gratis" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="gambar_url" class="form-label">URL Gambar</label>
+                            <input type="url" class="form-control" id="gambar_url" placeholder="https://contoh.com/foto.jpg" required>
+                            <small class="form-help">Gunakan tautan langsung ke gambar destinasi.</small>
+                        </div>
+                        <div class="form-field form-field-wide">
+                            <label for="deskripsi" class="form-label">Deskripsi Lengkap</label>
+                            <textarea class="form-control" id="deskripsi" rows="4" placeholder="Ceritakan daya tarik, suasana, atau informasi penting destinasi..." required></textarea>
+                        </div>
+                        <div class="form-actions form-field-wide">
+                            <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
+                            <button type="submit" class="btn btn-primary" id="btnSimpan"><i class="bi bi-check2-circle"></i> Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Sesuai Ketentuan Soal -->
+    <footer class="site-footer text-center mt-auto">
+        <p class="mb-0 small">@Copyright by 24552011306_Dafa Irsyad Nashrullah_TIF RP 24 CNS E</p>
+    </footer>
+
+    <!-- JavaScript Logika Dashboard & API Fetch -->
+    <script>
+        const apiUrl = "http://localhost/HiddenGems/backend-api/destinasi.php";
+        const destinasiModal = document.getElementById("destinasiModal");
+
+        function showDestinasiModal() {
+            destinasiModal.classList.add("show");
+            destinasiModal.setAttribute("aria-hidden", "false");
+            destinasiModal.setAttribute("aria-modal", "true");
+            document.body.classList.add("modal-open");
+            document.getElementById("nama_tempat").focus();
+        }
+
+        function hideDestinasiModal() {
+            destinasiModal.classList.remove("show");
+            destinasiModal.setAttribute("aria-hidden", "true");
+            destinasiModal.removeAttribute("aria-modal");
+            document.body.classList.remove("modal-open");
+        }
+
+        document.getElementById("btnTambahDestinasi").addEventListener("click", function() {
+            resetForm();
+            showDestinasiModal();
+        });
+
+        destinasiModal.querySelectorAll("[data-modal-close]").forEach(button => {
+            button.addEventListener("click", hideDestinasiModal);
+        });
+
+        destinasiModal.addEventListener("click", function(event) {
+            if (event.target === destinasiModal) hideDestinasiModal();
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape" && destinasiModal.classList.contains("show")) {
+                hideDestinasiModal();
+            }
+        });
+
+        // Jalankan saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", fetchDestinasi);
+
+        function showAlert(message, type = "success") {
+            const alertBox = document.getElementById("alertBox");
+            alertBox.className = `alert alert-${type}`;
+            alertBox.innerText = message;
+            alertBox.classList.remove("d-none");
+            setTimeout(() => alertBox.classList.add("d-none"), 4000);
+        }
+
+        // 1. READ: Ambil dan Tampilkan Data ke Tabel
+        function fetchDestinasi() {
+            fetch(apiUrl)
+                .then(res => res.json())
+                .then(result => {
+                    const tbody = document.getElementById("tabelDestinasi");
+                    tbody.innerHTML = "";
+
+                    if (result.status === "success" && result.data.length > 0) {
+                        result.data.forEach(item => {
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td><img src="${item.gambar_url}" alt="" width="50" height="40" class="rounded object-fit-cover"></td>
+                                    <td class="fw-semibold">${item.nama_tempat}</td>
+                                    <td><span class="badge bg-secondary">${item.kategori}</span></td>
+                                    <td>${item.lokasi}</td>
+                                    <td>Rp ${Number(item.harga_tiket).toLocaleString('id-ID')}</td>
+                                    <td class="text-end pe-3">
+                                        <button class="btn btn-sm btn-warning text-white me-1" onclick="editDestinasi(${item.id}, '${item.nama_tempat}', '${item.kategori}', '${item.lokasi}', '${item.harga_tiket}', '${item.gambar_url}', \`${item.deskripsi}\`)">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteDestinasi(${item.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada data destinasi.</td></tr>`;
+                    }
+                })
+                .catch(err => console.error("Gagal memuat data:", err));
+        }
+
+        // Reset Form ke Mode Tambah
+        function resetForm() {
+            document.getElementById("destinasiForm").reset();
+            document.getElementById("destinasiId").value = "";
+            document.getElementById("modalTitle").innerText = "Tambah Destinasi Baru";
+            document.getElementById("btnSimpan").innerHTML = '<i class="bi bi-check2-circle"></i> Simpan Data';
+        }
+
+        // 2. CREATE & UPDATE: Tangani Submit Form (POST atau PUT)
+        document.getElementById("destinasiForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById("destinasiId").value;
+            const data = {
+                nama_tempat: document.getElementById("nama_tempat").value,
+                kategori: document.getElementById("kategori").value,
+                lokasi: document.getElementById("lokasi").value,
+                harga_tiket: document.getElementById("harga_tiket").value,
+                gambar_url: document.getElementById("gambar_url").value,
+                deskripsi: document.getElementById("deskripsi").value
+            };
+
+            const method = id ? "PUT" : "POST";
+            const url = id ? `${apiUrl}?id=${id}` : apiUrl;
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.status === "success") {
+                    showAlert(result.message, "success");
+                    // Tutup modal
+                    hideDestinasiModal();
+                    fetchDestinasi(); // Refresh tabel
+                } else {
+                    showAlert("Gagal menyimpan data: " + result.message, "danger");
+                }
+            })
+            .catch(err => console.error("Error:", err));
+        });
+
+        // Isi Form untuk Edit
+        function editDestinasi(id, nama, kategori, lokasi, harga, gambar, deskripsi) {
+            document.getElementById("destinasiId").value = id;
+            document.getElementById("nama_tempat").value = nama;
+            document.getElementById("kategori").value = kategori;
+            document.getElementById("lokasi").value = lokasi;
+            document.getElementById("harga_tiket").value = harga;
+            document.getElementById("gambar_url").value = gambar;
+            document.getElementById("deskripsi").value = deskripsi;
+
+            document.getElementById("modalTitle").innerText = "Edit Destinasi Wisata";
+            document.getElementById("btnSimpan").innerHTML = '<i class="bi bi-arrow-repeat"></i> Perbarui Data';
+
+            showDestinasiModal();
+        }
+
+        // 3. DELETE: Hapus Data Destinasi
+        function deleteDestinasi(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus destinasi ini?")) {
+                fetch(`${apiUrl}?id=${id}`, {
+                    method: "DELETE"
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.status === "success") {
+                        showAlert(result.message, "success");
+                        fetchDestinasi();
+                    } else {
+                        showAlert("Gagal menghapus: " + result.message, "danger");
+                    }
+                })
+                .catch(err => console.error("Error:", err));
+            }
+        }
+    </script>
+</body>
+</html>

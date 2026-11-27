@@ -56,10 +56,8 @@
         </div>
     </header>
 
-    <!-- Section Informasi Perusahaan & Keunggulan -->
     <section id="informasi" class="py-5 bg-white border-bottom">
         <div class="container">
-            <!-- Info Perusahaan -->
             <div class="row align-items-center mb-5">
                 <div class="col-lg-6 mb-4 mb-lg-0">
                    <!--<span class="badge bg-success-subtle text-success fw-semibold px-3 py-2 rounded-pill mb-3">Tentang JelajahLokal</span> -->
@@ -92,7 +90,6 @@
                 </div>
             </div>
 
-            <!-- Keunggulan / Fitur -->
             <div class="row g-4 text-center mt-4">
                 <div class="col-md-4">
                     <div class="p-4 h-100 border-0 shadow-sm rounded-4 bg-light">
@@ -133,21 +130,18 @@
         <p class="mb-0 small">@Copyright by 24552011306_Dafa Irsyad Nashrullah_TIF RP 24 CNS E</p>
     </footer>
 
-    <!-- JavaScript untuk Fetch API -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // URL Endpoint API PHP Anda (sesuaikan jika menggunakan domain Laragon .test)
             const apiUrl = "http://localhost/HiddenGems/backend-api/destinasi.php";
 
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(result => {
                     const container = document.getElementById('destinasiContainer');
-                    container.innerHTML = ""; // Bersihkan loading
+                    container.innerHTML = "";
 
                     if (result.status === "success" && result.data.length > 0) {
                         result.data.forEach(item => {
-                            // Buat card HTML secara dinamis untuk setiap data di database
                             const cardHTML = `
                                 <div class="col-md-6 col-lg-4">
                                     <div class="card h-100 destination-card">

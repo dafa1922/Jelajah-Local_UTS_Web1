@@ -19,7 +19,7 @@ if (empty($input)) {
 $email = $input['email'] ?? '';
 $password = $input['password'] ?? '';
 
-// Akun default hardcode untuk testing cepat (Role: admin)
+
 if ($email === "admin" && $password === "password123") {
     echo json_encode([
         "status" => "success", 
@@ -45,7 +45,7 @@ if (!empty($email) && !empty($password)) {
             "user" => [
                 "nama" => $user['nama'], 
                 "email" => $user['email'],
-                "role" => $user['role'] // Mengirim role dari database ('admin' atau 'user')
+                "role" => $user['role'] 
             ]
         ]);
     } else {

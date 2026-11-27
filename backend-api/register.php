@@ -21,7 +21,7 @@ $email = $input['email'] ?? '';
 $password = $input['password'] ?? '';
 
 if (!empty($nama) && !empty($email) && !empty($password)) {
-    // Cek apakah email sudah terdaftar
+   
     $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $check->execute([$email]);
     if ($check->rowCount() > 0) {
@@ -30,7 +30,6 @@ if (!empty($nama) && !empty($email) && !empty($password)) {
         exit();
     }
 
-    // Enkripsi password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare("INSERT INTO users (nama, email, password) VALUES (?, ?, ?)");

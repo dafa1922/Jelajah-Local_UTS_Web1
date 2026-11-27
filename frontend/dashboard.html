@@ -14,7 +14,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100 bg-light">
 
-    <!-- Navbar Dashboard -->
+  
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3 site-navbar admin-navbar">
         <div class="container">
             <a class="navbar-brand fw-bold" href="dashboard.html"><span class="brand-mark"><i class="bi bi-compass-fill"></i></span>JelajahLokal <span class="text-muted fw-normal small">/ Admin</span></a>
@@ -26,23 +26,23 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+   
     <main class="container dashboard-main flex-grow-1">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="dashboard-heading fw-bold">Manajemen destinasi wisata</h2>
                 <p class="text-muted mb-0">Kelola data hidden gems yang akan tampil di halaman utama.</p>
             </div>
-            <!-- Tombol Trigger Modal Tambah -->
+           
             <button type="button" class="btn btn-primary rounded-pill px-4" id="btnTambahDestinasi">
                 <i class="bi bi-plus-circle"></i> Tambah Destinasi
             </button>
         </div>
 
-        <!-- Alert Notifikasi -->
+       
         <div id="alertBox" class="alert d-none" role="alert"></div>
 
-        <!-- Tabel Data Destinasi -->
+       
         <div class="card dashboard-table-card">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -68,7 +68,7 @@
         </div>
     </main>
 
-    <!-- Modal Tambah / Edit Destinasi -->
+  
     <div class="modal fade" id="destinasiModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -120,12 +120,12 @@
         </div>
     </div>
 
-    <!-- Footer Sesuai Ketentuan Soal -->
+
     <footer class="site-footer text-center mt-auto">
         <p class="mb-0 small">@Copyright by 24552011306_Dafa Irsyad Nashrullah_TIF RP 24 CNS E</p>
     </footer>
 
-    <!-- JavaScript Logika Dashboard & API Fetch -->
+  
     <script>
         const apiUrl = "http://localhost/HiddenGems/backend-api/destinasi.php";
         const destinasiModal = document.getElementById("destinasiModal");
@@ -164,7 +164,6 @@
             }
         });
 
-        // Jalankan saat halaman dimuat
         document.addEventListener("DOMContentLoaded", fetchDestinasi);
 
         function showAlert(message, type = "success") {
@@ -175,7 +174,7 @@
             setTimeout(() => alertBox.classList.add("d-none"), 4000);
         }
 
-        // 1. READ: Ambil dan Tampilkan Data ke Tabel
+      
         function fetchDestinasi() {
             fetch(apiUrl)
                 .then(res => res.json())
@@ -210,7 +209,6 @@
                 .catch(err => console.error("Gagal memuat data:", err));
         }
 
-        // Reset Form ke Mode Tambah
         function resetForm() {
             document.getElementById("destinasiForm").reset();
             document.getElementById("destinasiId").value = "";
@@ -218,7 +216,6 @@
             document.getElementById("btnSimpan").innerHTML = '<i class="bi bi-check2-circle"></i> Simpan Data';
         }
 
-        // 2. CREATE & UPDATE: Tangani Submit Form (POST atau PUT)
         document.getElementById("destinasiForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
@@ -254,7 +251,6 @@
             .catch(err => console.error("Error:", err));
         });
 
-        // Isi Form untuk Edit
         function editDestinasi(id, nama, kategori, lokasi, harga, gambar, deskripsi) {
             document.getElementById("destinasiId").value = id;
             document.getElementById("nama_tempat").value = nama;
@@ -270,7 +266,6 @@
             showDestinasiModal();
         }
 
-        // 3. DELETE: Hapus Data Destinasi
         function deleteDestinasi(id) {
             if (confirm("Apakah Anda yakin ingin menghapus destinasi ini?")) {
                 fetch(`${apiUrl}?id=${id}`, {

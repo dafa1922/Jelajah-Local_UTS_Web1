@@ -2,7 +2,7 @@
 $host = "localhost";
 $dbname = "jelajah_lokal_db";
 $username = "root";
-$password = ""; // Default Laragon password kosong
+$password = ""; 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
